@@ -19,7 +19,17 @@ RobotParams:
 #             all follows ROS convention (X-forward, Y-left, Z-Up).
 #-------------------------------------------------------------------------------
 SensorParams:
-  sensor_list:      ["OS064"]
+  sensor_list:        ["D455", "OS064"]  # ["OS064"]
+  D455:
+    type:             kCamera  # kLidar
+    CameraType:       kFixed
+    max_range:        10.0  # [m]
+    min_range:        0.52  # [m]
+    center_offset:    [ 0.0, 0.0, 0.0 ]
+    rotations:        [ 0.0, 0.0, 0.0 ]
+    fov:              [ rad(360, rad(180) ]
+    resolution:       [ 0.0003, 0.0003 ]
+    frontier_percentage_threshold: 0.04
   OS064:
     type:           kLidar
     max_range:      20.0
@@ -114,7 +124,7 @@ RandomSamplerParams:
 # exp_sensor_list: sensors used to compute exploration gain.
 #-------------------------------------------------------------------------------
 PlanningParams:
-  type:             kBasicExploration #kAdaptiveExploration, kBasicExploration
+  type:             kAdaptiveExploration #kBasicExploration #kAdaptiveExploration, kBasicExploration
   rr_mode:          kGraph
   exp_sensor_list:  ["OS064"]
   # no_gain_zones_list: ["g1"]
@@ -153,7 +163,7 @@ PlanningParams:
   clustering_radius: 0.5
   path_interpolation_distance: 0.5
   
-  time_budget_limit: 480 # seconds
+  time_budget_limit: 480 # seconds # VEGARD ENDRE MAKS TID
   auto_homing_enable: true
   go_home_if_fully_explored: true
 
