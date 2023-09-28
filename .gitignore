@@ -7,9 +7,6 @@ voxblox_planning_ws
 ros-drone-master/*
 ros-drone-master/
 ros-drone-master
-rmf_obelix_moveit_config/*
-rmf_obelix_moveit_config/
-rmf_obelix_moveit_config
 omplapp-1.6.0-Source/*
 omplapp-1.6.0-Source/
 omplapp-1.6.0-Source

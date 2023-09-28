@@ -1,0 +1,67 @@
+sensors: 
+  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+    image_topic: /rmf_obelix/camera/depth/image_raw
+    near_clipping_plane_distance: 0.3
+    far_clipping_plane_distance: 50.0
+    frame_subsample: 1
+    point_subsample: 1
+    max_update_rate: 1.0
+    padding_offset: 0.1
+    padding_scale: 1.0
+    filtered_cloud_topic: filtered_cloud
+    shadow_threshold: 0.2
+  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+    image_topic: /rmf_obelix/camera2/depth/image_raw
+    near_clipping_plane_distance: 0.3
+    far_clipping_plane_distance: 50.0
+    frame_subsample: 1
+    point_subsample: 1
+    max_update_rate: 1.0
+    padding_offset: 0.1
+    padding_scale: 1.0
+    filtered_cloud_topic: filtered_cloud
+    shadow_threshold: 0.2  
+  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+    image_topic: /rmf_obelix/camera3/depth/image_raw
+    near_clipping_plane_distance: 0.3
+    far_clipping_plane_distance: 50.0
+    frame_subsample: 1
+    point_subsample: 1
+    max_update_rate: 1.0
+    padding_offset: 0.1
+    padding_scale: 1.0
+    filtered_cloud_topic: filtered_cloud
+    shadow_threshold: 0.2
+  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+    image_topic: /rmf_obelix/camera4/depth/image_raw
+    near_clipping_plane_distance: 0.3
+    far_clipping_plane_distance: 50.0
+    frame_subsample: 1
+    point_subsample: 1
+    max_update_rate: 1.0
+    padding_offset: 0.1
+    padding_scale: 1.0
+    filtered_cloud_topic: filtered_cloud
+    shadow_threshold: 0.2  
+  # - filtered_cloud_topic: filtered_cloud
+  #   max_range: 50
+  #   max_update_rate: 1
+  #   padding_offset: .1
+  #   padding_scale: 1
+  #   point_cloud_topic: /gbplanner_node/surface_pointcloud
+  #   point_subsample: 1
+  #   sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+#  - sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
+#    point_cloud_topic: /gbplanner_node/surface_pointcloud
+#    max_range: 50.0
+#    frame_subsample: 10
+#    point_subsample: 440
+
+  # - filtered_cloud_topic: filtered_cloud
+  #   max_range: 50
+  #   max_update_rate: 1
+  #   padding_offset: .1
+  #   padding_scale: 1
+  #   point_cloud_topic: /gbplanner_node/surface_pointcloud
+  #   point_subsample: 1
+  #   sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater

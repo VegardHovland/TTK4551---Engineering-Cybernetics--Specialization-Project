@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: rotors_description
+    relative_path: urdf/rmf_obelix_moveit.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/rmf_obelix.srdf
+  CONFIG:
+    author_name: Vegard Hovland
+    author_email: vegardbho@ntnu.no
+    generated_timestamp: 1694787186

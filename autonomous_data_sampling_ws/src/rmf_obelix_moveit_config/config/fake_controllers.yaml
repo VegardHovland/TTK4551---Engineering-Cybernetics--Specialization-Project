@@ -1,0 +1,10 @@
+controller_list:
+  - name: fake_rmf_obelix_planning_group_controller
+    type: true
+    joints:
+      - virtual_joint
+initial:  # Define initial robot poses per group
+#  - group: rmf_obelix_planning_group
+#    pose: home
+
+  []

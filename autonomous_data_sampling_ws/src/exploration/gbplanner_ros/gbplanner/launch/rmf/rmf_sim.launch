@@ -58,6 +58,12 @@
       <arg name="z" value="0.5"/>
     </include>
 
+  <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+  	<param name="use_gui" value="true"/>
+    <param name="publish_frequency" type="double" value="50.0" />
+    <rosparam param="source_list">[/move_group/fake_controller_joint_states]</rosparam>
+  </node> -->
+
     <!-- Position controller  -->
     <node name="lee_position_controller_node" pkg="rotors_control" type="lee_position_controller_node" output="screen">
       <rosparam command="load" file="$(find rotors_gazebo)/resource/lee_controller_$(arg robot_name).yaml" />
@@ -66,17 +72,18 @@
     </node>
   </group>
 
+ <!-- Run actionserver -->
+  <!-- <node pkg="joint_command_interface" name="joint_command_interface" type="complete_action_server.py" output="screen">
+  </node> -->
+
+
   <arg name="odometry_topic" default="$(arg robot_name)/ground_truth/odometry_throttled"/>
   <node name="pose_throttler" type="throttle" pkg="topic_tools" args="messages $(arg robot_name)/ground_truth/pose_with_covariance 10 /msf_core/pose" />
+ 
   <!-- Graph based planning -->
   <node pkg="gbplanner" type="gbplanner_node" name="gbplanner_node" output="screen" launch-prefix="$(arg launch_prefix)">
     <remap from="odometry" to="$(arg odometry_topic)" />
-    <remap from="/pointcloud" to="/$(arg robot_name)/velodyne_points" /> <!-- For LiDAR pointcloud-->
-    <!--remap from="/pointcloud" to="/$(arg robot_name)/camera/depth/color/points" /--> <!-- For RGBD pointcloud-->
-    <remap from="/$(arg robot_name)/camera/depth/image_raw" to="/rmf_obelix/vi_sensor/camera_depth/depth/points"/>
-    <remap from="/$(arg robot_name)/camera1/depth/image_raw" to="/rmf_obelix/vi_sensor/camera_depth/depth/points"/>
-    <remap from="/$(arg robot_name)/camer3/depth/image_raw" to="/rmf_obelix/vi_sensor/camera_depth/depth/points"/>
-    <remap from="/$(arg robot_name)/camer4/depth/image_raw" to="/rmf_obelix/vi_sensor/camera_depth/depth/points"/>
+    <remap from="/pointcloud" to="/$(arg robot_name)/velodyne_points" />
     <rosparam command="load" file="$(arg gbplanner_config_file)" />
     <rosparam command="load" file="$(arg map_config_file)" />
   </node>
@@ -95,20 +102,13 @@
 
   <!-- Given the published joint states, publish tf for the robot links -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  
-  <!-- Run actionserver -->
-  <!-- <node pkg="action_controller" name="action_controller" type="action_Controller.cpp" output="screen">
-  </node> -->
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
   <include file="$(find rmf_obelix_moveit_config)/launch/move_group.launch">
-    <!-- <arg name="allow_trajectory_execution" value="true"/>
-    <arg name="fake_execution" value="false"/>
-    <arg name="info" value="false"/>
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution" value="true"/>
+    <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
-    <arg name="db" default="true" /> -->
-    <!-- <arg name="load_robot_description" value="$(arg load_robot_description)"/>  -->
-    <!-- <remap from="/gbplanner_node/occupied_nodes" to="/move_group/monitored_planning_scene"  /> -->
   </include>
 
 
