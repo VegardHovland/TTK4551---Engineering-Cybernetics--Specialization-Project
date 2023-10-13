@@ -31,7 +31,7 @@ class TrajectoryActionController:
 
         rospy.init_node("trajectory_executor")
         self.vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-        self.pose_sub = rospy.Subscriber("/ground_truth/state", Odometry, self.poseCallback)
+        self.pose_sub = rospy.Subscriber("/ground_truth/state", Pose, self.poseCallback)
         self.server_ = actionlib.SimpleActionServer(self.action_name, ExecuteDroneTrajectoryAction, execute_cb=self.executeCB, auto_start=False)
 
         self.orientation_client_ = actionlib.SimpleActionClient("/rmf_obelix/ground_truth/pose", Pose)
