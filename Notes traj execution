@@ -1,0 +1,55 @@
+header: 
+  seq: 0
+  stamp: 
+    secs: 453
+    nsecs: 620000000
+  frame_id: "world"
+joint_names: []
+points: 
+  - 
+    transforms: 
+      - 
+        translation: 
+          x: 1.7184313221520314e-13
+          y: 5.9084668047944914e-12
+          z: 0.05649999999878061
+        rotation: 
+          x: -0.0
+          y: -0.0
+          z: -8.499769800847338e-20
+          w: 1.0
+    velocities: 
+      - 
+        linear: 
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        angular: 
+          x: 0.0
+          y: 0.0
+          z: 0.0
+    accelerations: 
+      - 
+        linear: 
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        angular: 
+          x: 0.0
+          y: 0.0
+          z: 0.0
+    time_from_start: 
+      secs: 0
+      nsecs:  50000000
+
+
+vegard@vegard:~/TTK4550-Engineering-Cybernetics-Specialization-Project/autonomous_data_sampling_ws$ rostopic info /rmf_obelix/command/trajectory
+Type: trajectory_msgs/MultiDOFJointTrajectory
+
+Publishers: 
+ * /pci_general_ros_node (http://vegard:42689/)
+
+Subscribers: 
+ * /rmf_obelix/lee_position_controller_node (http://vegard:41359/)
+
+
