@@ -21,6 +21,7 @@ EPSILON = 1e-4
 
 class TrajectoryActionController:
     def __init__(self, name):
+        rospy.loginfo("1 !")
         self.action_name = name
         self.trajectory = []
         self.success = True
@@ -28,20 +29,21 @@ class TrajectoryActionController:
         self.last_pose = Pose()
         self.feedback_ = ExecuteDroneTrajectoryFeedback()
         self.result_ = ExecuteDroneTrajectoryResult()
-
+        rospy.loginfo("2 !")
         rospy.init_node("trajectory_executor")
-        self.vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-        self.pose_sub = rospy.Subscriber("/ground_truth/state", Pose, self.poseCallback)
+        self.pose_sub = rospy.Subscriber("/rmf_obelix/ground_truth/state", Pose, self.poseCallback)
+        pub = rospy.Publisher("/rmf_obelix/command/trajectory", MultiDOFJointTrajectory, queue_size=1)
+        #sub = rospy.Subscriber("/rmf_obelix/ground_truth/pose", Pose, callback=wp_man.update_pose)
         self.server_ = actionlib.SimpleActionServer(self.action_name, ExecuteDroneTrajectoryAction, execute_cb=self.executeCB, auto_start=False)
-
-        self.orientation_client_ = actionlib.SimpleActionClient("/rmf_obelix/ground_truth/pose", Pose)
-        self.orientation_client_.wait_for_server()
+        rospy.loginfo("3 !")
+        # Server never init! 
+        # self.orientation_client_ = actionlib.SimpleActionClient("/rmf_obelix/ground_truth/pose", ExecuteDroneTrajectoryAction)
+        # self.orientation_client_.wait_for_server()
 
         self.empty = Twist()
         self.cmd = Twist()
-        self.feedback_ = self.feedback
-        self.result_ = self.result
-
+        
+        rospy.loginfo("4 !")
         self.empty.linear.x = 0
         self.empty.linear.y = 0
         self.empty.linear.z = 0
@@ -50,6 +52,8 @@ class TrajectoryActionController:
         self.empty.angular.z = 0
 
         self.server_.start()
+        rospy.loginfo("Init sucess !")
+        rospy.spin() 
 
     def executeCB(self, goal):
         self.executing = True
@@ -79,22 +83,6 @@ class TrajectoryActionController:
             r = rospy.Rate(4)
             if ((abs(diffx) > 0.01 or abs(diffy) > 0.01) and abs(step_angle - heading) > 0.3):
                 goal = MultiDOFJointTrajectory()
-                rospy.loginfo("Adjust orientation")
-                p = Pose()
-                p.position.x = goalx
-                p.position.y = goaly
-                p.position.z = goalz
-                #if abs(diffx) > 0.01 or abs(diffy) > 0.01:
-                #    q = quaternion_from_euler(0, 0, step_angle)
-                #else:
-                #    q = quaternion_from_euler(0, 0, heading)
-                p.orientation.x = q[0]
-                p.orientation.y = q[1]
-                p.orientation.z = q[2]
-                p.orientation.w = q[3]
-                self.feedback_.current_pose = p
-                goal.target_pose.pose = p
-                goal.target_pose.header.frame_id = "world"
                 self.orientation_client_.send_goal(goal)
                 self.orientation_client_.wait_for_result()
                 continue
@@ -153,10 +141,11 @@ class TrajectoryActionController:
     def idle(self):
         while not rospy.is_shutdown():
             if not self.executing:
-                self.vel_pub.publish(self.empty)
+                rospy.loginfo("idle !")
             rospy.sleep(0.25)
 
     def actionCallback(self, feedback, p):
+        rospy.loginfo("action callback !")
         euler_distance = (p.position.x - feedback.current_pose.pose.position.x) ** 2 + \
                         (p.position.y - feedback.current_pose.pose.position.y) ** 2 + \
                         (p.position.z - feedback.current_pose.pose.position.z) ** 2
@@ -165,8 +154,9 @@ class TrajectoryActionController:
             self.orientation_client_.cancel_goal()
 
     def poseCallback(self, msg):
-        self.last_pose = msg.pose.pose
+        rospy.loginfo("pose callback !")
+        self.last_pose = msg.pose
 
 if __name__ == "__main__":
-    controller = TrajectoryActionController("/action/trajectory")
+    controller = TrajectoryActionController("execute_trajectory")
     controller.idle()

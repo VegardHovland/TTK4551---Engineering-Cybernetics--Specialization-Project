@@ -215,7 +215,7 @@ class TrajectoryActionController{
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "trajectory_executor");
-  TrajectoryActionController controller("/action/trajectory");
+  TrajectoryActionController controller("/rmf_obelix/trajectory_controller");
   controller.idle();
   //ros::spin();
   return 0;

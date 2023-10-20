@@ -73,8 +73,8 @@
   </group>
 
  <!-- Run actionserver -->
-  <!-- <node pkg="joint_command_interface" name="joint_command_interface" type="complete_action_server.py" output="screen">
-  </node> -->
+  <node pkg="joint_command_interface" name="joint_command_interface" type="trajectory_executer.py" output="screen">
+  </node>
 
 
   <arg name="odometry_topic" default="$(arg robot_name)/ground_truth/odometry_throttled"/>

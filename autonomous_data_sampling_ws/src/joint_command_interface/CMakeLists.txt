@@ -16,7 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   trajectory_msgs
   geometry_msgs
-  joint_command_interface
   actionlib_msgs
 )
 
