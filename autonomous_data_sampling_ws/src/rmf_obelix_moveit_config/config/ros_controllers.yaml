@@ -1,5 +1,6 @@
 controller_list:
-  - name: multi_dof_joint_trajectory_action
+  - name: rmf_obelix
+    action_ns: follow_joint_trajectory
     type: MultiDofFollowJointTrajectory
     default: true
     joints:

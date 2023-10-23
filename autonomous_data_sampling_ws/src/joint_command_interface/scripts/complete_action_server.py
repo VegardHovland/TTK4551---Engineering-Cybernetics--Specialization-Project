@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import rospy
 import actionlib
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32, Bool, String
 from sensor_msgs.msg import JointState
 from control_msgs.msg import FollowJointTrajectoryGoal 
 from control_msgs.msg import FollowJointTrajectoryActionGoal
@@ -19,67 +19,45 @@ import math
 import tf
 #from joint_command_interface.action import FollowJointTrajectoryAction, MultiDOFJointTrajectoryAction 
 #from joint_command_interface.msg import      
-from moveit_msgs.msg import ExecuteTrajectoryActionGoal
+from moveit_msgs.msg import ExecuteTrajectoryActionGoal, DisplayTrajectory
 #from service_proxies import *
-
+#from moveit import MoveGroupPythonInterface
+#from moveit import MoveGroupCommander
+#from moveit import movegroup_interface
+#from moveit import planning_scene_interface
+#from moveit import robot_commander
+#TODO: Add moveit interface
 
 class TrajectoryActionController(object):
     def __init__(self):
         rospy.init_node('rmf_obelix_interface')                                                       # init ros node
         rospy.loginfo("Node has started")
-        #self._action_ns = '/action/trajectory'  # controller_name + '/action/trajectory'                              # set namespace, same as moveit wants
-        #self._as = actionlib.SimpleActionServer(self._action_ns,MultiDofFollowJointTrajectoryAction,execute_cb=self.execute_cb,auto_start = False)
-        #self._as.register_goal_callback(self.goalCB)                                                # Register goal with callback function
-        #self._action_name = rospy.get_name()
-        #self._as.start()                                                                            # Start actionserver
-        #self._feedback = MultiDofFollowJointTrajectoryActionFeedback
-        #self._result = MultiDofFollowJointTrajectoryActionResult
-        #self.pos = Float32MultiArray()                                                              # Poisiton being published
-        #self.speed = Float32MultiArray()                                                            # velocity being published
-        #self.i=0                                                                                    # Counter for viapoint looping
-        #self.timer = 0
-        self.pose = Pose()                                                             # init pos for joint states                                                     
+        self.pose = Pose()                                                             # init pos for joint states       
+        self.path = DisplayTrajectory()                                             
         # Subscriber pose and publish to joint states
         self.sub = rospy.Subscriber("/rmf_obelix/ground_truth/pose", Pose, callback=self.get_pose)
-        self.commanSub = rospy.Subscriber("/execute_trajectory/goal", ExecuteTrajectoryActionGoal, callback=self.execute)
+        #self.commanSub = rospy.Subscriber("/execute_trajectory/goal", ExecuteTrajectoryActionGoal, callback=self.execute)
+        self.pathSub = rospy.Subscriber('/move_group/display_planned_path',DisplayTrajectory,callback=self.get_path)
+        self.executeSub = rospy.Subscriber('/execute_rrt_path/chatter',String,callback=self.execute)
         # Publish move command
         self.pub = rospy.Publisher("/rmf_obelix/command/trajectory", MultiDOFJointTrajectory, queue_size=1)        #rospy.Subscriber('/joint_states', JointState, self.get_joints)                              # define joint_states subscriber
         self.pubCancelAction = rospy.Publisher('/move_base/cancel',GoalID,queue_size=0)
         self.statusPub = rospy.Publisher('/execute_trajectory/status',GoalStatusArray,queue_size=0)
+        # Load map /move_group/load_map
+        # LoadMap = '/map path'
+        # map = rospy.ServiceProxy('/move_group/load_map', LoadMap)
         rospy.loginfo('Successful init')                                                            
         rospy.spin()                                                                                # Loop ros comunication
-
+    def get_path(self, path):
+        self.path = path
+        rospy.loginfo("New path from planner {}".format(self.path.trajectory[0].multi_dof_joint_trajectory.points))
+        self.path = self.path.trajectory[0].multi_dof_joint_trajectory.points   #Store planned waypoints
     # Callback function for executing trajectory
     def execute(self, goal): 
         rospy.loginfo("Executing callback for trajectory execution beep boop")
-        rospy.sleep(2)
-
-        rospy.loginfo(goal.goal)
-        # Set goal to be executed/succeeded
-        status = GoalStatusArray()
-        status.header = Header()
-        status.header.stamp = rospy.Time.now()
-        goalstatus = GoalStatus()
-        goalstatus.goal_id = goal.goal_id
-        goalstatus.status = 3
-        status.status_list = [goalstatus]
-        #status.status_list = [3]
-        for _ in range(3):
-            self.statusPub.publish(status)
-            rospy.sleep(1)
-        #Excetue trajectory
-        rospy.loginfo("Position Path points")
-        trajectory_points = goal.goal.trajectory                                                 # get the different points of the trajecotry
-        rospy.loginfo(trajectory_points)
-        rospy.loginfo("Position only Path points")
-        trajectory_points = trajectory_points.multi_dof_joint_trajectory.points    #.points.transforms.translation
-        rospy.loginfo(trajectory_points)
-
-        #Fufil multidoftraj msg
-
-        
+        rospy.sleep(1)
         #Loop through all points in trajectory
-        for _point in trajectory_points:
+        for _point in self.path:
             _w =_point.transforms
             rospy.loginfo("Commanding new waipoint (transforms) {}".format(_w))
             _w = _w[0].translation
@@ -97,13 +75,13 @@ class TrajectoryActionController(object):
             point = MultiDOFJointTrajectoryPoint([transforms],[velocities],[accelerations],rospy.Time())
             point.time_from_start.secs = 4
             trajectory_execute.points.append(point)
-            for _ in range(3):
+            #for _ in range(3):
             # Publish a few times - publishing just once might fail.
-                self.pub.publish(trajectory_execute)
-                rospy.sleep(0.5)
+            self.pub.publish(trajectory_execute)
+            #rospy.sleep(0.5)
             #Wait until point is reached
             while not self.tol(_w):
-                rospy.sleep(0.5)             
+                rospy.sleep(0.1)             
 
         # Reset counter for next trajecotry execution
         #rospy.loginfo("Canceling planning in moveit allowing for replanning")
@@ -121,7 +99,7 @@ class TrajectoryActionController(object):
         diff_y = (_pose.y - current.y) ** 2
         diff_z = (_pose.z - current.z) ** 2
         _diff = (diff_x + diff_y + diff_z) ** 0.5
-        if _diff <0.5:
+        if _diff <0.2:
             rospy.loginfo("Diff from waypoint is {}, continuing".format(_diff))
             return True
         else:
