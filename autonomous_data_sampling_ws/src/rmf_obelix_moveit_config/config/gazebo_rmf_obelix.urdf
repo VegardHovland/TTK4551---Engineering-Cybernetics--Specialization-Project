@@ -109,6 +109,8 @@
             <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
         </plugin>
     </gazebo>
+
+
     <joint name="rmf_obelix/rotor_0_joint" type="continuous">
         <origin rpy="0 0 0" xyz="0.07071067811800001 -0.07071067811800001 0.05" />
         <axis xyz="0 0 1" />
@@ -138,6 +140,7 @@
             </geometry>
         </collision>
     </link>
+    
     <gazebo>
         <plugin filename="librotors_gazebo_motor_model.so" name="rmf_obelix_front_right_motor_model">
             <robotNamespace>rmf_obelix</robotNamespace>

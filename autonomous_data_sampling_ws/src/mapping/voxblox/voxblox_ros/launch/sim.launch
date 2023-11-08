@@ -11,6 +11,8 @@
     <param name="verbose" value="true" />
     <param name="max_attempts_to_generate_viewpoint" value="50" />
     <param name="world_frame" value="map" />
+    <param name="mesh_filename" value="$(find voxblox_ros)/mesh_results/$(anon kitti).ply" />
+    <param name="update_mesh_every_n_sec" value="1.0" />
   </node>
 
 </launch>

@@ -10,6 +10,7 @@ use_sparsity_compensation_factor: True
 sparsity_compensation_factor: 100.0 #10.0
 color_mode: "colors"
 verbose: False
+generate_mesh: True
 update_mesh_every_n_sec: 1.0
 mesh_min_weight: 1e-4
 slice_level: 1.0
@@ -32,7 +33,7 @@ accumulate_icp_corrections: True
 timestamp_tolerance_sec: 0.001 #0.001
 publish_tsdf_map: True ###False
 publish_esdf_map: True ###False
-
+mesh_filename: "adilhouse.ply"
 # ESDF #
 esdf_max_distance_m: 2.0
 clear_sphere_for_planning: False

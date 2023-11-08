@@ -1,1 +1,3 @@
 {}
+#kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
+#kinematics_solver/joints_whitelist: [base_link]
