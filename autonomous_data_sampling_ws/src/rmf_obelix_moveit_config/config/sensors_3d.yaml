@@ -2,9 +2,9 @@ sensors:
   - filtered_cloud_topic: filtered_cloud
     max_range: 50
     max_update_rate: 1
-    padding_offset: 0.3
-    padding_scale: 3
-    point_cloud_topic: /gbplanner_node/surface_pointcloud
+    padding_offset: 0.1
+    padding_scale: 5
+    point_cloud_topic: /gbplanner_node/surface_pointcloud # /rmf_obelix/velodyne_points
     point_subsample: 1
     sensor_plugin: occupancy_map_monitor/PointCloudOctomapUpdater
     min_range: 0.5

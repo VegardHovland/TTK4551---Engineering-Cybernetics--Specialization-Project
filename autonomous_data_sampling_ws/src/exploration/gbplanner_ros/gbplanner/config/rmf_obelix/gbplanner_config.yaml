@@ -128,7 +128,7 @@ PlanningParams:
   rr_mode:          kGraph
   exp_sensor_list:  ["OS064"]
   # no_gain_zones_list: ["g1"]
-  v_max:            0.1 #1.0 # max velocity m/s
+  v_max:            1 #1.0 # max velocity m/s
   v_homing_max:     0.1 # max velocity m/s
   yaw_rate_max:     0.15 # max angular velocity rad/s
   yaw_tangent_correction: true # If true - all headings will be along the path segment

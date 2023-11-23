@@ -50,13 +50,7 @@ class QuadrotorCommander:
         self.move_group = moveit_commander.MoveGroupCommander(self.group_name)
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', DisplayTrajectory, queue_size=10)
         self.pose = Pose()
-        #elf.move_group.set_planning_time(10)
-        #elf.move_group.set_workspace([-5, -5, -5, 5, 5, 5])
-        #elf.move_group.set_planner_id("RRTConnectkConfigDefault")
-        #elf.move_group.set_num_planning_attempts(10)
-        #self.move_group.set_max_velocity_scaling_factor(1.0)
-        #self.move_group.set_max_acceleration_scaling_factor(1.0)
-        #self.move_group.set_goal_tolerance(0.1) 
+        print(self.robot) ## Probleme er at man ikke får denne?! RobotCommander class.. 
         rospy.sleep(5)                                                            # init pos for joint states       
         self.sub = rospy.Subscriber("/rmf_obelix/ground_truth/pose", Pose, callback=self.get_pose)
         #/move_group/monitored_planning_scene
@@ -95,7 +89,9 @@ class QuadrotorCommander:
         #self.move_group.set_start_state()
         # Plan 
         self.move_group.set_planning_time(10)
-        self.move_group.set_workspace([-5, 5, -5, 5, -5, 5])
+        self.move_group.set_workspace([-10, -10, -10, 10, 10, 10])
+        self.move_group.set_planner_id("RRTConnectkConfigDefault")
+        self.move_group.set_num_planning_attempts(10)
         plan = self.move_group.go(wait=True)
         #self.move_group.stop()
         #self.move_group.clear_pose_targets()
