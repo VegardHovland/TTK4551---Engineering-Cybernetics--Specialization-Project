@@ -196,7 +196,6 @@ class TrajectoryActionController(object):
             ax.set_xlabel('X [m]]')
             ax.set_ylabel('Y [m]]')
             ax.set_zlabel('Z [m]]')
-            ax.set_title('Planned Path vs Quadrotor Position')
             ax.grid(True)
         # Plot drone position if traj executed
         if(self.xDrone  and self.yDrone  and self.zDrone ):
@@ -236,7 +235,6 @@ class TrajectoryActionController(object):
             # Set lables and title
             ax2.set_xlabel('X [m]]')
             ax2.set_ylabel('Y [m]]')
-            ax2.set_title('Planned Path vs Quadrotor Position')
             ax2.grid(True)
         # Plot drone position if traj executed
         if(self.xDrone  and self.yDrone  and self.zDrone ):
