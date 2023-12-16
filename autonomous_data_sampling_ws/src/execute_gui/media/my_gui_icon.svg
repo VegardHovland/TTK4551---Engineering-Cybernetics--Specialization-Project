@@ -9,7 +9,7 @@
    id="svg5"
    inkscape:version="1.1.2 (76b9e6a115, 2022-02-25)"
    sodipodi:docname="my_gui_icon.svg"
-   inkscape:export-filename="/home/kris/ros/aura_ws/src/template_gui_package/media/my_gui_icon.png"
+   inkscape:export-filename="/home/kris/ros/aura_ws/src/execute_gui/media/my_gui_icon.png"
    inkscape:export-xdpi="50"
    inkscape:export-ydpi="50"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -43,7 +43,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <circle
-       style="opacity:0.670649;fill:#00d455;stroke-width:4.88896;stroke-linecap:round;stroke-linejoin:round"
+       style="opacity:1;fill:#4de289;stroke-width:4.88896;stroke-linecap:round;stroke-linejoin:round;fill-opacity:1"
        id="path850"
        cx="132.38446"
        cy="132.16524"

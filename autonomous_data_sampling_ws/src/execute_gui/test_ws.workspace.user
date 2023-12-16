@@ -109,7 +109,7 @@
      <value type="QString">LD_LIBRARY_PATH=/opt/ros/noetic/lib</value>
      <value type="QString">PATH=/opt/ros/noetic/bin:/home/kris/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin</value>
      <value type="QString">PKG_CONFIG_PATH=/opt/ros/noetic/lib/pkgconfig</value>
-     <value type="QString">PWD=/home/kris/ros/testing_ws/src/template_gui_package</value>
+     <value type="QString">PWD=/home/kris/ros/testing_ws/src/execute_gui</value>
      <value type="QString">PYTHONPATH=/opt/ros/noetic/lib/python3/dist-packages</value>
      <value type="QString">ROSLISP_PACKAGE_DIRECTORIES=</value>
      <value type="QString">ROS_DISTRO=noetic</value>

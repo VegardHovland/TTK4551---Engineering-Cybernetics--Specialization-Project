@@ -1,4 +1,4 @@
-# template_gui_package
+# execute_gui
 A simple example/template for making ROS QT GUIs
 
 ## For a full explaination.

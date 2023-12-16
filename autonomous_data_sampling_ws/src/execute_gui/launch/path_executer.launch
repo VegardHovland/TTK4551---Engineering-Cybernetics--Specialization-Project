@@ -1,0 +1,4 @@
+<launch>
+  <node name="execute_rrt_path" pkg="execute_gui" type="hello_gui_node" output="screen"/>
+  <!-- <node name="talker" pkg="execute_gui" type="talker" output="screen"/> -->
+</launch>

@@ -50,8 +50,12 @@ class TrajectoryActionController(object):
         self.pubCancelAction = rospy.Publisher('/move_base/cancel',GoalID,queue_size=0)
         self.statusPub = rospy.Publisher('/execute_trajectory/status',GoalStatusArray,queue_size=0)
         self.marker_pub = rospy.Publisher("visualization_marker", Marker, queue_size=10)
+        self.marker_pub_rrt = rospy.Publisher("visualization_marker_rrt", Marker, queue_size=10)
+        self.marker_pub_rrtstar = rospy.Publisher("visualization_marker_rrtstar", Marker, queue_size=10)
+        self.marker_pub_ccr_connect = rospy.Publisher("visualization_marker_rrtconnect", Marker, queue_size=10)
         self.path_pub = rospy.Publisher('/path_topic', Path, queue_size=10)
-
+        self.color_iter = 0
+        self.comparepaths = True
         # Load map /move_group/load_map
         # LoadMap = '/map path'
         # map = rospy.ServiceProxy('/move_group/load_map', LoadMap)
@@ -72,7 +76,65 @@ class TrajectoryActionController(object):
         # Visualize planned path in Rviz
         # self.visPath(self.path)
         # Matplot lib visualization
+                # Fufill Path message for use in rviz
+        
+        #draw lines to compare paths from rrt variants
+        if self.comparepaths:
+            points = Marker()
+            line_strip = Marker()
+            line_list = Marker()
+            points.header.frame_id = line_strip.header.frame_id = line_list.header.frame_id = "world"
+            points.header.stamp = line_strip.header.stamp = line_list.header.stamp = rospy.Time.now()
+            points.ns = line_strip.ns = line_list.ns = "points_and_lines"
+            points.action = line_strip.action = line_list.action = Marker.ADD
+            points.pose.orientation.w = line_strip.pose.orientation.w = line_list.pose.orientation.w = 1.0
+            points.id = 0
+            line_strip.id = 1
+            line_list.id = 2
+            points.type = Marker.POINTS
+            line_strip.type = Marker.LINE_STRIP
+            line_list.type = Marker.LINE_LIST
+            # POINTS markers use x and y scale for width/height respectively
+            points.scale.x = 0
+            points.scale.y = 0
+            # LINE_STRIP/LINE_LIST markers use only the x component of scale, for the line width
+            line_strip.scale.x = 0.1
+            line_list.scale.x = 0
+            # Points are green
+            points.color.g = 1.0
+            points.color.a = 1.0
+            # Line strip is blue
+            line_strip.color.b = 1.0
+            line_strip.color.a = 1.0
+            # Line list is red
+            line_list.color.r = 1.0
+            line_list.color.a = 1.0
+            #Create the vertices for the points and lines
+            for _point in self.path:
+                _w =_point.transforms
+                _w = _w[0].translation
+                p = Point()
+                p.x = _w.x
+                p.y = _w.y
+                p.z = _w.z
+                points.points.append(p)
+                line_strip.points.append(p)
+            # Publish the marker
+            #self.marker_pub.publish(points)
+            if self.color_iter == 0:
+                line_strip.color.r = 1.0
+                line_strip.color.a = 1.0
+                self.marker_pub_rrt.publish(line_strip)
+            elif self.color_iter == 1:
+                line_strip.color.g = 1.0
+                line_strip.color.a = 1.0
+                self.marker_pub_rrtstar.publish(line_strip)
+            elif self.color_iter == 2:
+                line_strip.color.b = 1.0
+                line_strip.color.a = 1.0
+                self.marker_pub_ccr_connect.publish(line_strip)
 
+            self.color_iter = self.color_iter +1
 
     # Callback function for executing trajectory
     def execute(self, goal): 
@@ -279,21 +341,22 @@ class TrajectoryActionController(object):
         line_list.color.r = 1.0
         line_list.color.a = 1.0
         # Create the vertices for the points and lines
-        for _path in self.pathlist:
-            for _point in _path:
-                _w =_point.transforms
-                _w = _w[0].translation
-                p = Point()
-                p.x = _w.x
-                p.y = _w.y
-                p.z = _w.z
-                points.points.append(p)
-                line_strip.points.append(p)
-        # Publish the marker
-        #self.marker_pub.publish(points)
-        self.marker_pub.publish(line_strip)
+        #for _path in self.pathlist:
+        #    for _point in _path:
+        #        _w =_point.transforms
+        #        _w = _w[0].translation
+        #        p = Point()
+        #        p.x = _w.x
+        #        p.y = _w.y
+        #        p.z = _w.z
+        #        points.points.append(p)
+        #        line_strip.points.append(p)
+        ## Publish the marker
+        ##self.marker_pub.publish(points)
+        #self.marker_pub.publish(line_strip)
         #self.marker_pub.publish(line_list)
         rospy.sleep(.1)
+        
         # make line for actual drone position
         if(self.xDrone  and self.yDrone  and self.zDrone ):
             X_drone = np.array(self.xDrone)
