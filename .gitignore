@@ -25,3 +25,5 @@ test.rviz
 hector-moveit-melodic-devel/*
 hector-moveit-melodic-devel
 hector-moveit-melodic-devel/
+*.pdf
+*.png

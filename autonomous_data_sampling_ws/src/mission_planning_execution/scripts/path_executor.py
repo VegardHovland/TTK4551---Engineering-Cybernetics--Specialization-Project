@@ -18,21 +18,11 @@ from control_msgs.msg import (
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion, Transform, Twist
 from actionlib_msgs.msg import GoalStatusArray, GoalID, GoalStatus
 import math
-import tf
-#from joint_command_interface.action import FollowJointTrajectoryAction, MultiDOFJointTrajectoryAction 
-#from joint_command_interface.msg import      
+import tf    
 from moveit_msgs.msg import ExecuteTrajectoryActionGoal, DisplayTrajectory
 from visualization_msgs.msg import Marker
 import matplotlib.pyplot as plt
-import numpy as np
 from nav_msgs.msg import Path
-#from service_proxies import *
-#from moveit import MoveGroupPythonInterface
-#from moveit import MoveGroupCommander
-#from moveit import movegroup_interface
-#from moveit import planning_scene_interface
-#from moveit import robot_commander
-#TODO: Add moveit interface
 
 class TrajectoryActionController(object):
     def __init__(self):
@@ -59,24 +49,19 @@ class TrajectoryActionController(object):
         # Load map /move_group/load_map
         # LoadMap = '/map path'
         # map = rospy.ServiceProxy('/move_group/load_map', LoadMap)
-
         self.xDrone = []
         self.yDrone = []
         self.zDrone = []
         self.pathlist = []
         rospy.loginfo('Successful init')                                                            
         rospy.spin()                                                                                # Loop ros comunication
+
     def get_path(self, path):
         self.path = path
         rospy.loginfo("New path from planner {}".format(self.path.trajectory[0].multi_dof_joint_trajectory.points))
         self.path = self.path.trajectory[0].multi_dof_joint_trajectory.points   #Store planned waypoints
         self.pathlist.append(self.path)
         print("path list is now {} long".format(len(self.pathlist)))
-        #self.matplotPath() # Plot 3d path using matplotlib
-        # Visualize planned path in Rviz
-        # self.visPath(self.path)
-        # Matplot lib visualization
-                # Fufill Path message for use in rviz
         
         #draw lines to compare paths from rrt variants
         if self.comparepaths:
@@ -170,16 +155,13 @@ class TrajectoryActionController(object):
                 trajectory_execute.points.append(point)
                 self.pub.publish(trajectory_execute)
                 #rospy.sleep(0.5)
-
                 #Add drone postion
                 self.xDrone.append(self.pose.position.x)
                 self.yDrone.append(self.pose.position.y)
                 self.zDrone.append(self.pose.position.z)
-
                 #Wait until point is reached
                 while not self.tol(_w):
                     rospy.sleep(0.00001)    
-
                 # if point is last point sleep
                 if _point == _path[-1]:     
                     rospy.sleep(5)
@@ -213,6 +195,7 @@ class TrajectoryActionController(object):
         else:
             #rospy.loginfo("Diff from waypoint is {}, waiting".format(_diff))
             return False
+        
     def matplotPath(self):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -341,20 +324,20 @@ class TrajectoryActionController(object):
         line_list.color.r = 1.0
         line_list.color.a = 1.0
         # Create the vertices for the points and lines
-        #for _path in self.pathlist:
-        #    for _point in _path:
-        #        _w =_point.transforms
-        #        _w = _w[0].translation
-        #        p = Point()
-        #        p.x = _w.x
-        #        p.y = _w.y
-        #        p.z = _w.z
-        #        points.points.append(p)
-        #        line_strip.points.append(p)
-        ## Publish the marker
-        ##self.marker_pub.publish(points)
-        #self.marker_pub.publish(line_strip)
-        #self.marker_pub.publish(line_list)
+        for _path in self.pathlist:
+            for _point in _path:
+                _w =_point.transforms
+                _w = _w[0].translation
+                p = Point()
+                p.x = _w.x
+                p.y = _w.y
+                p.z = _w.z
+                points.points.append(p)
+                line_strip.points.append(p)
+        # Publish the marker
+        #self.marker_pub.publish(points)
+        self.marker_pub.publish(line_strip)
+        self.marker_pub.publish(line_list)
         rospy.sleep(.1)
         
         # make line for actual drone position

@@ -97,7 +97,7 @@
     <arg name="debug" value="$(arg debug)"/>
   </include>
   
-  <include file="$(find template_gui_package)/launch/path_executer.launch">
+  <include file="$(find execute_gui)/launch/path_executer.launch">
   </include>
 
   <node pkg="rviz" type="rviz" name="path_planner_interface" output="screen" args="-d $(find mission_planning_execution)/config/rmf_obelix_plan.rviz"/>

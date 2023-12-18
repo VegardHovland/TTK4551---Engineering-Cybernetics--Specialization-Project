@@ -50,7 +50,6 @@ class QuadrotorCommander:
         self.move_group = moveit_commander.MoveGroupCommander(self.group_name)
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', DisplayTrajectory, queue_size=10)
         self.pose = Pose()
-        print(self.robot) ## Probleme er at man ikke får denne?! RobotCommander class.. 
         rospy.sleep(5)                                                            # init pos for joint states       
         self.sub = rospy.Subscriber("/rmf_obelix/ground_truth/pose", Pose, callback=self.get_pose)
         #/move_group/monitored_planning_scene
@@ -89,7 +88,7 @@ class QuadrotorCommander:
         #self.move_group.set_start_state()
         # Plan 
         self.move_group.set_planning_time(10)
-        self.move_group.set_workspace([-10, -10, -10, 10, 10, 10])
+        self.move_group.set_workspace([-x, -y, -z, x, y, z])
         self.move_group.set_planner_id("RRTConnectkConfigDefault")
         self.move_group.set_num_planning_attempts(10)
         plan = self.move_group.go(wait=True)
@@ -106,10 +105,6 @@ class QuadrotorCommander:
         except:
             print("Error calculating trajectory")
             pass
-
-
-
-
 
     def get_pose(self, pose):
         # Get pose
@@ -144,60 +139,29 @@ if __name__ == '__main__':
         # Create the MoveIt commander interface
         quadrotor_commander = QuadrotorCommander()
         # set planning time to 10s and workspace to 10x10x5m
-        #for i in range(5):
-        #    quadrotor_commander.move_group.set_planning_time(10)
-        #    quadrotor_commander.move_group.set_workspace([-5, -5, -5, 5, 5, 5])
-        #    quadrotor_commander.move_group.set_planner_id("RRTConnectkConfigDefault")
-        #    quadrotor_commander.move_group.set_num_planning_attempts(10)
-        #    quadrotor_commander.move_group.set_max_velocity_scaling_factor(1.0)
-        #    quadrotor_commander.move_group.set_max_acceleration_scaling_factor(1.0)
-        #    quadrotor_commander.move_group.set_goal_tolerance(0.1)
-        #    rospy.sleep(1)
-        while True:
-        #    print(quadrotor_commander.move_group.get_current_state())
-        #    current_robot_state = quadrotor_commander.move_group.get_current_state()
-        #    # Extract the joint positions from the MultiDOFJointState
-        #    joint_state_msg = JointState()
-        #    joint_state_msg.name = current_robot_state.joint_state.name
-        #    joint_state_msg.position = [
-        #        current_robot_state.multi_dof_joint_state.transforms[0].translation.x,
-        #        current_robot_state.multi_dof_joint_state.transforms[0].translation.y,
-        #        current_robot_state.multi_dof_joint_state.transforms[0].translation.z,
-        #        current_robot_state.multi_dof_joint_state.transforms[0].rotation.x,
-        #        current_robot_state.multi_dof_joint_state.transforms[0].rotation.y,
-        #        current_robot_state.multi_dof_joint_state.transforms[0].rotation.z,
-        #        current_robot_state.multi_dof_joint_state.transforms[0].rotation.w,
-        #        ]
-#
-        #    # Set the modified JointState as the start state
-        #    quadrotor_commander.move_group.set_start_state(joint_state_msg)
-#
-            quadrotor_commander.move_group.set_start_state(quadrotor_commander.move_group.get_current_state())
-            quadrotor_commander.move_group.set_start_state_to_current_state()
-            quadrotor_commander.go_to_waypoint(0, 0, 1)
-            rospy.sleep(2)
-        # Set waypoint list of points to visit
-        waypoint_list = [[1.0, 2.0, 3.0],
-                          [4.0, 5.0, 6.0],
-                          [7.0, 8.0, 9.0],
-                          [10.0, 11.0, 12.0],
-                          [13.0, 14.0, 15.0]]
-        
-        #quadrotor_commander.debugMovegroup()
-        #while True:
-        #    quadrotor_commander.go_to_waypoint(0, 0, 1)
-        #    rospy.sleep(2)
-        # Get robot position
-        #rospy.Subscriber("/rmf_obelix/ground_truth/pose", Pose, callback=self.get_pose)
+        for i in range(5):
+            quadrotor_commander.move_group.set_planning_time(10)
+            quadrotor_commander.move_group.set_workspace([-5, -5, -5, 5, 5, 5])
+            quadrotor_commander.move_group.set_planner_id("RRTConnectkConfigDefault")
+            quadrotor_commander.move_group.set_num_planning_attempts(10)
+            quadrotor_commander.move_group.set_max_velocity_scaling_factor(1.0)
+            quadrotor_commander.move_group.set_max_acceleration_scaling_factor(1.0)
+            quadrotor_commander.move_group.set_goal_tolerance(0.1)
+            rospy.sleep(1)
+        quadrotor_commander.move_group.set_start_state_to_current_state()
+        rospy.sleep(2)
+        # Set waypoint list of points to visit all rooms in floor 2 of the building
+        waypoint_list = [[-6.635 * 10^-5,	9.45*10^-5,	-7.79*10^-5],
+                          [4.03 *10^-5, 9.9 * 10^-5,	9.5*10^-5],
+                          [3.0245186300290747, -2.5910522184447387, 0.8949843896790408],
+                          [3.966754822403286, 1.7774597521147226, 0.8269618500032928],
+                          [-1.8788720537224786, 2.5702150996482, 1.1510636716570706]]
         # Set the starting position of the quadrotor
-        #while True:
-        #    for wpt in waypoint_list:
-        #        quadrotor_commander.go_to_waypoint(wpt[0], wpt[1], wpt[2])
-        #        rospy.sleep(2)
-        #quadrotor_commander.set_start_position()
+        while True:
+            for wpt in waypoint_list:
+                quadrotor_commander.go_to_waypoint(wpt[0], wpt[1], wpt[2])
+                rospy.sleep(2)
 
-        # Command the quadrotor to a waypoint
-        #quadrotor_commander.go_to_waypoint(1.0, 2.0, 3.0)
 
     except rospy.ROSInterruptException:
         pass
