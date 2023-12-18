@@ -14,10 +14,7 @@
   <arg name="voxblox_config_file" default="$(find gbplanner)/config/$(arg robot_name)/voxblox_sim_config.yaml"/>
   <arg name="map_config_file" default="$(arg voxblox_config_file)"/>
 
-  <!-- World files -->
-  <!-- <arg name="world_file" default="$(find planner_gazebo_sim)/worlds/darpa_cave_01.world"/> -->
-  <!-- <arg name="world_file" default="$(find planner_gazebo_sim)/worlds/darpa_subt_final_circuit.world"/> -->
-  <!-- <arg name="world_file" default="$(find planner_gazebo_sim)/worlds/darpa_subt_final_circuit.world"/> -->
+  <!-- World files 1) scenario 1, 2) scenario 2-->
   <!-- <arg name="world_file" default="$(find planner_gazebo_sim)/worlds/00_house_dt.world"/> -->
   <arg name="world_file" default="$(find planner_gazebo_sim)/worlds/0_my_dt.world"/>
 

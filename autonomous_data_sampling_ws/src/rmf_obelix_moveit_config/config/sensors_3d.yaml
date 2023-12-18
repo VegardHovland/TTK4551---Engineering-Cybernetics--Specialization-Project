@@ -11,7 +11,7 @@ sensors:
     near_clipping_plane_distance: 0.5
 
 
-  ## OLD   
+  ## Depth camera   
 #  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
 #    image_topic: /rmf_obelix/camera/depth/image_raw
 #    near_clipping_plane_distance: 0.3
